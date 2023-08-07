@@ -1,0 +1,12 @@
+<div class="content">
+    <p>What do you want to learn today?</p>
+    <form class="content" [formGroup]="createPlanForm">
+        <label for="skill">Skill: </label>
+        <input id="skill" type="text" formControlName="skill">
+
+        <label for="openAIApiKey">Your OpenAI API key: </label>
+        <input id="openAIApiKey" type="password" formControlName="openAIApiKey">
+    </form>
+    <button (click)=" generatePlan()">Generate plan</button>
+    <app-plan></app-plan>
+</div>

@@ -1,0 +1,6 @@
+<p *ngIf="!plan">Your generated plan will appear here.</p>
+<div *ngIf="plan">
+    <p>{{ plan.id }}</p>
+    <p>{{ plan.name }}</p>
+    <p>{{ plan.dayPlans }}</p>
+</div>
