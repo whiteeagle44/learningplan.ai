@@ -1,0 +1,11 @@
+.item {
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+    gap: 1em;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+}

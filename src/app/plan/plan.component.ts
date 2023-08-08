@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { Plan } from '../models/plan';
 import { PlanService } from '../services/plan.service';
+import { Observable, combineLatest, map } from 'rxjs';
+import { PlanErrorResponse } from '../services/openai.service';
 
 @Component({
   selector: 'app-plan',
@@ -8,7 +10,9 @@ import { PlanService } from '../services/plan.service';
   styleUrls: ['./plan.component.css']
 })
 export class PlanComponent {
-  plan: Plan | undefined = this.planService.plan
+  plan$: Observable<Plan> = this.planService.plan$
+  planError$: Observable<PlanErrorResponse | null> | null = this.planService.planError$
+  isLoading$: Observable<boolean> = this.planService.isLoading$
 
   constructor(private readonly planService: PlanService) { }
 }

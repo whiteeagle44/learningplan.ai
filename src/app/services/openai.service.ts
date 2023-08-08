@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import { PlanService } from './plan.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { map } from 'rxjs';
 import { environment } from '../environments/environment';
 import { DayPlan } from '../models/dayPlan';
 
@@ -18,14 +18,32 @@ interface APIResponse {
   ],
 }
 
+export interface PlanErrorResponse {
+  error: {
+    error: {
+      code: string,
+      message: string,
+      type: string
+    }
+  },
+  message: string
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class OpenAIService {
-  constructor(private readonly planService: PlanService, private readonly http: HttpClient) { }
+  constructor(private readonly http: HttpClient) { }
 
   getPlan(skill: string, apiKey: string) {
-    const messages = [{ "role": "user", "content": `give me a learning plan for learning ${skill}` }]
+    let currentDate = new Date()
+    const messages = [{
+      "role": "system",
+      "content": `You will be provided with a skill that the user wants to learn. Take the role of an expert on this skill. Give a detailed learning plan for this skill for each day starting at ${currentDate.toDateString()}. Use the Pareto principle to select the most important curriculum content. For each day give at least one link to a specific resource that the user should learn from.`
+    },
+    {
+      "role": "user", "content": `${skill}`
+    }]
     const functionFormat = [
       {
         "name": "create",
@@ -70,22 +88,20 @@ export class OpenAIService {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${apiKey}`
     })
+    console.log("requesting response for ", skill)
     const response = this.http.post<APIResponse>(`${environment.apiUrl}`,
       {
         "model": "gpt-3.5-turbo",
         "messages": messages,
         "functions": functionFormat
       }, { headers })
-    response.subscribe({
-      next: (response: APIResponse) => {
-        const responseMessage = response.choices[0].message;
-
-        if (responseMessage.function_call) {
-          let functionArgs: { name: string, dayPlans: DayPlan[] } = JSON.parse(responseMessage.function_call.arguments)
-          this.planService.create(functionArgs.name, functionArgs.dayPlans)
-        }
-      }
-    });
+    return response.pipe(
+      map(response => response.choices[0].message),
+      map(message => {
+        let functionArgs: { name: string, dayPlans: DayPlan[] } = JSON.parse(message.function_call.arguments)
+        return functionArgs
+      })
+    )
 
   }
 }

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { OpenAIService } from '../services/openai.service';
+import { PlanService } from '../services/plan.service';
 import { FormBuilder } from '@angular/forms';
 
 @Component({
@@ -13,14 +13,15 @@ export class CreatePlanComponent {
     openAIApiKey: ""
   })
 
-  constructor(private readonly openAIService: OpenAIService, private readonly fb: FormBuilder) { }
+  constructor(private readonly planService: PlanService, private readonly fb: FormBuilder) { }
 
   generatePlan() {
     const skill = this.createPlanForm.value.skill;
     const openAIApiKey = this.createPlanForm.value.openAIApiKey;
 
     if (skill && openAIApiKey) {
-      this.openAIService.getPlan(skill, openAIApiKey)
+      this.planService.createPlan(skill, openAIApiKey)
+      this.createPlanForm.reset()
     } else {
       console.error(`skill or openAIApiKey is undefined`)
     }

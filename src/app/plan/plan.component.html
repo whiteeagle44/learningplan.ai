@@ -1,6 +1,12 @@
-<p *ngIf="!plan">Your generated plan will appear here.</p>
-<div *ngIf="plan">
-    <p>{{ plan.id }}</p>
-    <p>{{ plan.name }}</p>
-    <p>{{ plan.dayPlans }}</p>
-</div>
+<ng-container *ngIf="{plan: plan$ | async, planError: planError$ | async} as vm">
+    <p *ngIf="!vm.plan && vm.planError as planError">{{ planError.error.error.message }}</p>
+    <div *ngIf="!vm.planError && vm.plan as plan">
+        <p>{{ plan.name }}</p>
+        <app-plan-item *ngFor="let item of plan.dayPlans" [item]="item"></app-plan-item>
+    </div>
+    <div *ngIf="isLoading$ | async">
+        <div *ngIf="!vm.planError">
+            <div class="loader"></div>
+        </div>
+    </div>
+</ng-container>

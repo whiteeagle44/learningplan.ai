@@ -3,6 +3,6 @@ export interface DayPlan {
     isCompleted: boolean;
     goal: string;
     description: string;
-    date: Date;
-    resources: URL[];
+    date: string;
+    resources: string[];
 }
