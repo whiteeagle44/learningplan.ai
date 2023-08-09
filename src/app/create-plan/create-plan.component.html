@@ -1,14 +1,17 @@
 <div class="content">
-    <p>What do you want to learn today?</p>
+    <h2 class="mat-h2">What do you want to learn today?</h2>
     <form class="content" [formGroup]="createPlanForm">
-        <label for="skill">Skill: </label>
-        <input id="skill" type="text" formControlName="skill">
-
-        <label for="openAIApiKey">Your OpenAI API key: </label>
-        <input id="openAIApiKey" type="password" formControlName="openAIApiKey">
+        <mat-form-field>
+            <mat-label>Skill</mat-label>
+            <input matInput formControlName="skill" id="skill">
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Your OpenAI API key</mat-label>
+            <input matInput formControlName="openAIApiKey" id="openAIApiKey" type="password">
+        </mat-form-field>
     </form>
-    <button (click)=" generatePlan()">Generate plan</button>
-    <p *ngIf="planToAddErrors$ | async as planToAddErrors">
+    <button mat-raised-button color="primary" (click)="generatePlan()">Generate plan</button>
+    <p *ngIf="planToAddErrors$ | async as planToAddErrors" class="mat-error">
         {{ planToAddErrors.error.error.message }}
     </p>
     <app-plan></app-plan>

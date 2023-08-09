@@ -26,6 +26,8 @@ export class PlanService {
     switchMap((params: { skill: string, apiKey: string }) => this.openAIService.getPlan(params.skill, params.apiKey).pipe(
       map((plan) => createPlan(plan.name, plan.dayPlans)),
       tap((plan: Plan) => {
+        console.log("adding plan")
+        console.log(plan)
         this.addPlan(plan)
         this.isLoadingEmitter$.next(false)
         console.log("response obtained!")
@@ -54,6 +56,15 @@ export class PlanService {
     if (storedPlans) {
       this.plans = JSON.parse(storedPlans);
     }
+
+    const storedPlanIdCounter = localStorage.getItem('planIdCounter');
+    if (storedPlanIdCounter) {
+      planIdCounter = parseInt(storedPlanIdCounter, 10);
+    }
+    const storedDayPlanIdCounter = localStorage.getItem('dayPlanIdCounter');
+    if (storedDayPlanIdCounter) {
+      dayPlanIdCounter = parseInt(storedDayPlanIdCounter, 10);
+    }
   }
 
   private addPlan(plan: Plan) {
@@ -64,6 +75,8 @@ export class PlanService {
   // Update local storage with the current plans array
   private updateLocalStorage() {
     localStorage.setItem('plans', JSON.stringify(this.plans));
+    localStorage.setItem('planIdCounter', planIdCounter.toString());
+    localStorage.setItem('dayPlanIdCounter', dayPlanIdCounter.toString());
   }
 
   createPlan(skill: string, apiKey: string) {

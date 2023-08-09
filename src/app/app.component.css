@@ -1,19 +1,18 @@
-.all {
-    height: 100%;
-    display: flex;
-    flex-direction: row;
+.container {
+    min-height: 100vh;
+    padding-bottom: 1em;
+
 }
 
 .navigation {
+    width: 20vw;
     padding-top: 1em;
     padding-left: 1em;
-    min-width: 15vw;
-    background-color: #B6C9BB;
+    background-color: #C6AD94;
 }
 
 .outlet {
     margin-top: 1em;
-    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;

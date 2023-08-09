@@ -4,3 +4,15 @@
     align-items: center;
     gap: 1em;
 }
+
+.mat-form-field {
+    width: 100%;
+}
+
+.mat-button {
+    margin-top: 1em;
+}
+
+.error-message {
+    color: red;
+}

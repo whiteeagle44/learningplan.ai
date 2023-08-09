@@ -1,9 +1,9 @@
 <ng-container *ngIf="{plan} as vm">
     <div *ngIf="vm.plan as plan">
-        <p>{{ plan.name }}</p>
+        <h2 class="mat-h2">{{ plan.name }}</h2>
         <app-plan-item *ngFor="let item of plan.dayPlans" [item]="item"></app-plan-item>
     </div>
     <div *ngIf="isLoading$ | async">
-        <div class="loader"></div>
+        <mat-progress-spinner class="spinner" mode="indeterminate"></mat-progress-spinner>
     </div>
 </ng-container>

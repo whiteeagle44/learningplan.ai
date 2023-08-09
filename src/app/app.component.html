@@ -1,14 +1,18 @@
 <div class="all">
-  <div class="navigation">
-    <h1>learningplan.ai</h1>
-    <a routerLink="">
-      <p>Add a new plan</p>
-    </a>
-    <a routerLink="plan/{{plan.id}}" *ngFor="let plan of plans">
-      <p>{{ plan.name}}</p>
-    </a>
-  </div>
-  <div class="outlet">
-    <router-outlet></router-outlet>
-  </div>
+  <mat-sidenav-container class="container">
+    <mat-sidenav mode="side" opened class="navigation">
+      <h1 class="mat-h1">learningplan.ai</h1>
+      <a routerLink="">
+        <p class="mat-body">Add a new plan</p>
+      </a>
+      <div *ngFor="let plan of plans">
+        <a routerLink="plan/{{plan.id}}">
+          <p class="mat-body">{{ plan.name }}</p>
+        </a>
+      </div>
+    </mat-sidenav>
+    <mat-sidenav-content class="outlet">
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
 </div>

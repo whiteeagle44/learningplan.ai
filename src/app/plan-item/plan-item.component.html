@@ -1,8 +1,8 @@
 <div class="item" *ngIf="item">
-    <input type="checkbox" value="staticItem.isCompleted">
+    <mat-checkbox class="checkbox"></mat-checkbox>
     <div class="content">
-        <p>{{ item.date }}: {{ item.goal }}</p>
-        <p>{{ item.description }}</p>
-        <p>{{ item.resources }}</p>
+        <p class="mat-body-strong">{{ item.date }}: {{ item.goal }}</p>
+        <p class="mat-body">{{ item.description }}</p>
+        <p class="mat-body">{{ item.resources }}</p>
     </div>
 </div>
