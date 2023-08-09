@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject, catchError, map, switchMap, tap, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, catchError, ignoreElements, map, of, switchMap, tap } from 'rxjs';
 import { DayPlan } from '../models/dayPlan';
 import { Plan } from '../models/plan';
 import { OpenAIService, PlanErrorResponse } from './openai.service';
@@ -21,21 +21,27 @@ export const createDayPlan = (isCompleted: boolean, goal: string, description: s
   providedIn: 'root'
 })
 export class PlanService {
-  refreshPlan$ = new Subject<{ skill: string, apiKey: string }>()
-  plan$: Observable<Plan> = this.refreshPlan$.pipe(
-    switchMap((params: { skill: string, apiKey: string }) => this.openAIService.getPlan(params.skill, params.apiKey)),
-    map((plan) => createPlan(plan.name, plan.dayPlans)),
-    tap(() => {
-      this.isLoadingEmitter$.next(false)
-      console.log("response obtained!")
-    }),
-    catchError((err: PlanErrorResponse) => {
-      this.isLoadingEmitter$.next(false)
-      this.planErrorEmitter$.next(err)
-      console.log("error thrown!")
-      return throwError(() => err)
-    })
+  refreshPlans$ = new Subject<{ skill: string, apiKey: string }>()
+  planToAddErrors$: Observable<PlanErrorResponse> = this.refreshPlans$.pipe(
+    switchMap((params: { skill: string, apiKey: string }) => this.openAIService.getPlan(params.skill, params.apiKey).pipe(
+      map((plan) => createPlan(plan.name, plan.dayPlans)),
+      tap((plan: Plan) => {
+        this.plans.push(plan)
+        this.isLoadingEmitter$.next(false)
+        console.log("response obtained!")
+      }),
+      ignoreElements(),
+      catchError((err: PlanErrorResponse) => {
+        this.isLoadingEmitter$.next(false)
+        this.planErrorEmitter$.next(err)
+        console.log("error thrown!")
+        return of(err)
+        // return throwError(() => err)
+      })
+
+    )),
   )
+  plans: Plan[] = []
   planErrorEmitter$ = new BehaviorSubject<PlanErrorResponse | null>(null)
   planError$ = this.planErrorEmitter$.asObservable();
 
@@ -46,7 +52,15 @@ export class PlanService {
 
   createPlan(skill: string, apiKey: string) {
     this.isLoadingEmitter$.next(true)
-    this.refreshPlan$.next({ skill, apiKey })
+    this.refreshPlans$.next({ skill, apiKey })
+  }
+
+  getPlanById(id: number | null) {
+    console.log("id: ", id)
+    if (id === null) {
+      throw new Error("id cannot be null")
+    }
+    return this.plans.find((plan: Plan) => plan.id === id)
   }
 
 }

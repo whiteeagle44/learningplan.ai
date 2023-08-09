@@ -8,5 +8,8 @@
         <input id="openAIApiKey" type="password" formControlName="openAIApiKey">
     </form>
     <button (click)=" generatePlan()">Generate plan</button>
+    <p *ngIf="planToAddErrors$ | async as planToAddErrors">
+        {{ planToAddErrors.error.error.message }}
+    </p>
     <app-plan></app-plan>
 </div>

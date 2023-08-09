@@ -1,4 +1,19 @@
+.all {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.navigation {
+    padding-top: 1em;
+    padding-left: 1em;
+    min-width: 15vw;
+    background-color: #B6C9BB;
+}
+
 .outlet {
+    margin-top: 1em;
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;

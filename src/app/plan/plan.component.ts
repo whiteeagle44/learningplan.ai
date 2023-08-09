@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { Plan } from '../models/plan';
 import { PlanService } from '../services/plan.service';
-import { Observable, combineLatest, map } from 'rxjs';
+import { Observable, combineLatest, map, switchMap } from 'rxjs';
 import { PlanErrorResponse } from '../services/openai.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-plan',
@@ -10,9 +11,9 @@ import { PlanErrorResponse } from '../services/openai.service';
   styleUrls: ['./plan.component.css']
 })
 export class PlanComponent {
-  plan$: Observable<Plan> = this.planService.plan$
-  planError$: Observable<PlanErrorResponse | null> | null = this.planService.planError$
+  planId: number | null = Number(this.route.snapshot.paramMap.get('planId'));
+  plan: Plan | undefined = this.planService.getPlanById(this.planId)
   isLoading$: Observable<boolean> = this.planService.isLoading$
 
-  constructor(private readonly planService: PlanService) { }
+  constructor(private route: ActivatedRoute, private readonly planService: PlanService) { }
 }

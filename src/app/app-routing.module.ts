@@ -5,7 +5,7 @@ import { PlanComponent } from './plan/plan.component';
 
 const routes: Routes = [
   { path: '', component: CreatePlanComponent },
-  { path: 'checkout', component: PlanComponent },
+  { path: 'plan/:planId', component: PlanComponent },
 ];
 
 @NgModule({

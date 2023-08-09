@@ -12,6 +12,7 @@ export class CreatePlanComponent {
     skill: "",
     openAIApiKey: ""
   })
+  planToAddErrors$ = this.planService.planToAddErrors$
 
   constructor(private readonly planService: PlanService, private readonly fb: FormBuilder) { }
 
