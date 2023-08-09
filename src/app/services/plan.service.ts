@@ -26,7 +26,7 @@ export class PlanService {
     switchMap((params: { skill: string, apiKey: string }) => this.openAIService.getPlan(params.skill, params.apiKey).pipe(
       map((plan) => createPlan(plan.name, plan.dayPlans)),
       tap((plan: Plan) => {
-        this.plans.push(plan)
+        this.addPlan(plan)
         this.isLoadingEmitter$.next(false)
         console.log("response obtained!")
       }),
@@ -48,7 +48,23 @@ export class PlanService {
   isLoadingEmitter$ = new BehaviorSubject<boolean>(false)
   isLoading$ = this.isLoadingEmitter$.asObservable()
 
-  constructor(private readonly openAIService: OpenAIService) { }
+  constructor(private readonly openAIService: OpenAIService) {
+    // Load plans from local storage during service initialization
+    const storedPlans = localStorage.getItem('plans');
+    if (storedPlans) {
+      this.plans = JSON.parse(storedPlans);
+    }
+  }
+
+  private addPlan(plan: Plan) {
+    this.plans.push(plan);
+    this.updateLocalStorage();
+  }
+
+  // Update local storage with the current plans array
+  private updateLocalStorage() {
+    localStorage.setItem('plans', JSON.stringify(this.plans));
+  }
 
   createPlan(skill: string, apiKey: string) {
     this.isLoadingEmitter$.next(true)
