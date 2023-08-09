@@ -11,9 +11,20 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./plan.component.css']
 })
 export class PlanComponent {
-  planId: number | null = Number(this.route.snapshot.paramMap.get('planId'));
+  planId: number | null = 0; // Initialize with null
   plan: Plan | undefined = this.planService.getPlanById(this.planId)
   isLoading$: Observable<boolean> = this.planService.isLoading$
 
   constructor(private route: ActivatedRoute, private readonly planService: PlanService) { }
+
+  ngOnInit() {
+    this.route.paramMap.subscribe(paramMap => {
+      const newPlanId = Number(paramMap.get('planId'));
+      if (newPlanId !== this.planId && this.planId !== null) {
+        this.planId = newPlanId;
+        this.plan = this.planService.getPlanById(this.planId);
+      }
+    });
+  }
+
 }
